@@ -9,14 +9,16 @@
 
 class QPainter;
 class enemy;
-class MainWindow;
 class QTimer;
+class easymode;
+class hardmode;
 
 class Tower : QObject
 {
     Q_OBJECT
 public:
-    Tower(QPoint pos, MainWindow *game,int ID=1);
+    Tower(QPoint pos, easymode *game,int ID=1);
+    Tower(QPoint pos, hardmode *game,int ID=1);
     ~Tower();
     void levelup();
     void draw(QPainter *painter) const;
@@ -27,7 +29,7 @@ public:
     void removeBullet();
     void damageEnemy();
     void lostSightOfEnemy();
-
+    QPoint returnPos();
 private slots:
     void shootWeapon();
 
@@ -38,7 +40,8 @@ private:
     int				m_fireRate;		// 代表再次攻击敌人的时间间隔
     int             ID;
     enemy *			m_chooseEnemy;
-    MainWindow *	m_game;
+    easymode *	    m_game=nullptr;
+    hardmode *      M_game=nullptr;
     QTimer *		m_fireRateTimer;
 
     QPoint	m_pos;

@@ -13,5 +13,22 @@
         <file>3.png</file>
         <file>4.png</file>
         <file>bullet2.png</file>
+        <file>start.jpg</file>
+        <file>start.png</file>
+        <file>startpress.png</file>
+        <file>choose.jpg</file>
+        <file>return.png</file>
+        <file>easy.png</file>
+        <file>hard.png</file>
+        <file>play.png</file>
+        <file>background2.png</file>
+        <file>Mark's Theme.mp3</file>
+        <file>Jump.mp3</file>
+        <file>L6.png</file>
+        <file>L5.png</file>
+        <file>L7.png</file>
+        <file>press.png</file>
+        <file>introduce.png</file>
+        <file>Hero.mp3</file>
     </qresource>
 </RCC>

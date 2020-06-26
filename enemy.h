@@ -10,14 +10,16 @@
 
 class track;
 class QPainter;
-class MainWindow;
 class Tower;
+class easymode;
+class hardmode;
 
 class enemy : public QObject
 {
     Q_OBJECT
 public:
-    enemy(track *startWayPoint, MainWindow *game,int id=1);
+    enemy(track *startWayPoint, easymode *game,int id=1);
+    enemy(track *startWayPoint, hardmode *game,int id=1);
     ~enemy();
 
     void draw(QPainter *painter);
@@ -41,7 +43,8 @@ private:
 
     QPoint			m_pos;
     track *		    m_destinationWayPoint;
-    MainWindow *	m_game;
+    easymode *	    m_game=nullptr;
+    hardmode *      M_game=nullptr;
     QList<Tower *>	m_attackedTowersList;
 
     QPixmap   m_sprite;

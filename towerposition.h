@@ -17,7 +17,7 @@ public:
 
     bool hasTower() const;
     const QPoint centerPos() const;
-    bool containPoint(const QPoint &pos) const;
+    bool containPoint(const QPoint &pos);
 
     void draw(QPainter *painter) const;
 

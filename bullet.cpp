@@ -3,14 +3,34 @@
 #include "mainwindow.h"
 #include <QPainter>
 #include <QPropertyAnimation>
+#include "easymode.h"
+#include "hardmode.h"
 
 bullet::bullet(QPoint startPos, QPoint targetPoint, int damage, enemy *target,
-               MainWindow *game,int id/*=1*/)
+               easymode *game,int id/*=1*/)
     : m_startPos(startPos)
     , m_targetPos(targetPoint)
     , m_currentPos(startPos)
     , m_target(target)
     , m_game(game)
+    , m_damage(damage)
+    , ID(id)
+{
+    if(ID==1){
+        m_sprite=QPixmap(":/bullet.png");
+    }
+    if(ID==2){
+        m_sprite=QPixmap(":/bullet2.png");
+    }
+}
+
+bullet::bullet(QPoint startPos, QPoint targetPoint, int damage, enemy *target,
+               hardmode *game,int id/*=1*/)
+    : m_startPos(startPos)
+    , m_targetPos(targetPoint)
+    , m_currentPos(startPos)
+    , m_target(target)
+    , M_game(game)
     , m_damage(damage)
     , ID(id)
 {
@@ -46,9 +66,18 @@ void bullet::hitTarget()
     // 可能多个炮弹击中敌人,而其中一个将其消灭,导致敌人delete
     // 后续炮弹再攻击到的敌人就是无效内存区域
     // 因此先判断下敌人是否还有效
-    if (m_game->enemyList().indexOf(m_target) != -1)
-        m_target->getDamage(m_damage);
-    m_game->removedBullet(this);
+    if(m_game){
+        if (m_game->enemyList().indexOf(m_target) != -1)
+            m_target->getDamage(m_damage);
+        m_game->removedBullet(this);
+    }
+    if(M_game){
+        if (M_game->enemyList().indexOf(m_target) != -1)
+            m_target->getDamage(m_damage);
+        M_game->removedBullet(this);
+    }
+
+
 }
 
 void bullet::setCurrentPos(QPoint pos)

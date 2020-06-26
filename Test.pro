@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,7 +31,13 @@ SOURCES += \
     towerposition.cpp \
     tower.cpp \
     track.cpp \
-    bullet.cpp
+    bullet.cpp \
+    easymode.cpp \
+    button.cpp \
+    choosemode.cpp \
+    end.cpp \
+    hardmode.cpp \
+    introduce.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +46,13 @@ HEADERS += \
     tower.h \
     track.h \
     bullet.h \
-    check_enemy.h
+    check_enemy.h \
+    easymode.h \
+    button.h \
+    choosemode.h \
+    end.h \
+    hardmode.h \
+    introduce.h
 
 FORMS += \
         mainwindow.ui

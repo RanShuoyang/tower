@@ -9,8 +9,10 @@
 #include <QMatrix>
 #include <QVector2D>
 #include <QtMath>
+#include "easymode.h"
+#include "hardmode.h"
 
-enemy::enemy(track *startWayPoint, MainWindow *game,int id/*=1*/)
+enemy::enemy(track *startWayPoint,easymode *game,int id/*=1*/)
     : QObject(nullptr)
     , m_active(false)
     , ID(id)
@@ -22,20 +24,54 @@ enemy::enemy(track *startWayPoint, MainWindow *game,int id/*=1*/)
 {
     if(ID==1){
         m_sprite=QPixmap(":/L1.png");
-        m_maxHp=40;
-        m_currentHp=40;
+        m_maxHp=60;
+        m_currentHp=60;
    }
    if(ID==2){
         m_sprite=QPixmap(":/L2.png");
         m_maxHp=100;
         m_currentHp=100;
-        m_walkingSpeed=2.0;
+        m_walkingSpeed=3.0;
    }
    if(ID==3){
        m_sprite=QPixmap(":/L4.png");
        m_maxHp=1500;
        m_currentHp=1500;
-       m_walkingSpeed=0.7;
+       m_walkingSpeed=1.0;
+   }
+}
+enemy::enemy(track *startWayPoint,hardmode *game,int id/*=1*/)
+    : QObject(nullptr)
+    , m_active(false)
+    , ID(id)
+    , m_walkingSpeed(1.5)
+    , m_pos(startWayPoint->pos())
+    , m_destinationWayPoint(startWayPoint->nextWayPoint())
+    , M_game(game)
+
+{
+    if(ID==1){
+        m_sprite=QPixmap(":/L6.png");
+        m_maxHp=100;
+        m_currentHp=100;
+   }
+   if(ID==2){
+        m_sprite=QPixmap(":/L5.png");
+        m_maxHp=300;
+        m_currentHp=300;
+        m_walkingSpeed=2.0;
+   }
+   if(ID==3){
+       m_sprite=QPixmap(":/L4.png");
+       m_maxHp=2500;
+       m_currentHp=2500;
+       m_walkingSpeed=1;
+   }
+   if(ID==4){
+       m_sprite=QPixmap(":/L7.png");
+       m_maxHp=5000;
+       m_currentHp=5000;
+       m_walkingSpeed=0.8;
    }
 }
 enemy::~enemy()
@@ -67,8 +103,14 @@ void enemy::move()
         else
         {
             // 表示进入基地
-            m_game->getHpDamage();
-            m_game->removedEnemy(this);
+            if(m_game){
+                m_game->getHpDamage();
+                m_game->removedEnemy(this);
+            }
+            if(M_game){
+                M_game->getHpDamage();
+                M_game->removedEnemy(this);
+            }
             return;
         }
     }
@@ -96,7 +138,7 @@ void enemy::draw(QPainter *painter)
     static const int Health_Bar_Width = 50;
     painter->save();
 
-    QPoint healthBarPoint = m_pos + QPoint(-20,-80);
+    QPoint healthBarPoint = m_pos + QPoint(-m_sprite.size().width()/4,-(m_sprite.size().height()*2/3 + 10));
     // 绘制血条
     painter->setPen(Qt::NoPen);
     painter->setBrush(Qt::red);
@@ -111,7 +153,7 @@ void enemy::draw(QPainter *painter)
     painter->drawRect(healthBarRect);
 
     // 绘制偏转坐标,由中心+偏移=左上
-    static const QPoint offsetPoint(-m_sprite.size().width() / 2, -m_sprite.size().height() / 2);
+    static const QPoint offsetPoint(-m_sprite.size().width()/2, -m_sprite.size().height()*2/3);
     painter->translate(m_pos);
     // 绘制敌人
     painter->drawPixmap(offsetPoint, m_sprite);
@@ -127,7 +169,12 @@ void enemy::getRemoved()
     foreach (Tower *attacker, m_attackedTowersList)
         attacker->targetKilled();
     // 通知game,此敌人已经阵亡
-    m_game->removedEnemy(this);
+    if(m_game){
+        m_game->removedEnemy(this);
+    }
+    if(M_game){
+        M_game->removedEnemy(this);
+    }
 }
 
 void enemy::getDamage(int damage)
@@ -139,8 +186,14 @@ void enemy::getDamage(int damage)
     if (m_currentHp <= 0)
     {
 
-        m_game->awardGold(200);
+        if(m_game){
+        m_game->awardGold(100);
         getRemoved();
+        }
+        if(M_game){
+            M_game->awardGold(100);
+            getRemoved();
+        }
     }
 }
 

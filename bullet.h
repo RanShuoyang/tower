@@ -9,7 +9,8 @@
 
 class QPainter;
 class enemy;
-class MainWindow;
+class easymode;
+class hardmode;
 
 class bullet : QObject
 {
@@ -18,7 +19,9 @@ class bullet : QObject
 
 public:
     bullet(QPoint startPos, QPoint targetPoint, int damage, enemy *target,
-           MainWindow *game, int id=1);
+           easymode *game, int id=1);
+    bullet(QPoint startPos, QPoint targetPoint, int damage, enemy *target,
+           hardmode *game, int id=1);
 
     void draw(QPainter *painter) const;
     void move();
@@ -34,7 +37,8 @@ private:
     QPixmap	        m_sprite;
     QPoint			m_currentPos;
     enemy *			m_target;
-    MainWindow *	m_game;
+    easymode *	    m_game=nullptr;
+    hardmode *      M_game=nullptr;
     int				m_damage;
     int             ID;
 };

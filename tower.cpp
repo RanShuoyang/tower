@@ -9,10 +9,12 @@
 #include <QVector2D>
 #include <QtMath>
 #include <QPoint>
+#include "easymode.h"
+#include "hardmode.h"
 
 
 
-Tower::Tower(QPoint pos, MainWindow *game,int id/*=1*/)
+Tower::Tower(QPoint pos, easymode *game,int id/*=1*/)
     : m_attacking(false)
     , m_attackRange(250)
     , m_damage(10)
@@ -28,27 +30,63 @@ Tower::Tower(QPoint pos, MainWindow *game,int id/*=1*/)
     }
     if(ID==2){
         m_sprite=QPixmap(":/3.png");
-        m_damage=15;
-        m_fireRate=1200;
+        m_damage=20;
+        m_fireRate=700;
     }
     m_fireRateTimer = new QTimer(this);
     connect(m_fireRateTimer, SIGNAL(timeout()), this, SLOT(shootWeapon()));
 }
 
+Tower::Tower(QPoint pos, hardmode *game,int id/*=1*/)
+    : m_attacking(false)
+    , m_attackRange(250)
+    , m_damage(15)
+    , m_fireRate(1000)
+    , ID(id)
+    , m_chooseEnemy(nullptr)
+    , M_game(game)
+    , m_pos(pos)
+
+{
+    if(ID==1){
+        m_sprite=QPixmap(":/1.png");
+    }
+    if(ID==2){
+        m_sprite=QPixmap(":/3.png");
+        m_damage=30;
+        m_fireRate=800;
+    }
+    m_fireRateTimer = new QTimer(this);
+    connect(m_fireRateTimer, SIGNAL(timeout()), this, SLOT(shootWeapon()));
+}
 Tower::~Tower()
 {
     delete m_fireRateTimer;
     m_fireRateTimer = nullptr;
 }
 void Tower::levelup(){
-    if(ID==1){
-    m_sprite=QPixmap(":/2.png");
-    m_damage=20;
+    if(m_game){
+      if(ID==1){
+      m_sprite=QPixmap(":/2.png");
+      m_damage=25;
+      }
+      if(ID==2){
+      m_sprite=QPixmap(":/4.png");
+      m_damage=25;
+      }
     }
-    if(ID==2){
-    m_sprite=QPixmap(":/4.png");
-    m_damage=20;
+    if(M_game){
+      if(ID==1){
+      m_sprite=QPixmap(":/2.png");
+      m_damage=20;
+      m_fireRate=1200;
+      }
+      if(ID==2){
+      m_sprite=QPixmap(":/4.png");
+      m_damage=40;
+      }
     }
+
 }
 void Tower::checkEnemyInRange()
 {
@@ -67,6 +105,7 @@ void Tower::checkEnemyInRange()
     else
     {
         // 遍历敌人,看是否有敌人在攻击范围内
+       if(m_game){
         QList<enemy *> enemyList = m_game->enemyList();
         foreach (enemy *enemy, enemyList)
         {
@@ -76,6 +115,18 @@ void Tower::checkEnemyInRange()
                 break;
             }
         }
+       }
+       if(M_game){
+        QList<enemy *> enemyList = M_game->enemyList();
+        foreach (enemy *enemy, enemyList)
+        {
+            if (collisionWithCircle(m_pos, m_attackRange, enemy->pos(), 1))
+            {
+                chooseEnemyForAttack(enemy);
+                break;
+            }
+        }
+       }
     }
 }
 
@@ -106,14 +157,28 @@ void Tower::shootWeapon()
 {
     QPoint p(m_pos.x()-10,m_pos.y()-60);
     if(ID==1){
-        bullet *bullet = new class bullet(p, m_chooseEnemy->pos(), m_damage, m_chooseEnemy, m_game,1);
-        bullet->move();
-        m_game->addBullet(bullet);
+        if(m_game){
+            bullet *bullet = new class bullet(p, m_chooseEnemy->pos(), m_damage, m_chooseEnemy, m_game,1);
+            bullet->move();
+            m_game->addBullet(bullet);
+        }
+        if(M_game){
+            bullet *bullet = new class bullet(p, m_chooseEnemy->pos(), m_damage, m_chooseEnemy, M_game,1);
+            bullet->move();
+            M_game->addBullet(bullet);
+        }
     }
     if(ID==2){
+        if(m_game){
         bullet *bullet = new class bullet(p, m_chooseEnemy->pos(), m_damage, m_chooseEnemy, m_game,2);
         bullet->move();
         m_game->addBullet(bullet);
+        }
+        if(M_game){
+        bullet *bullet = new class bullet(p, m_chooseEnemy->pos(), m_damage, m_chooseEnemy, M_game,2);
+        bullet->move();
+        M_game->addBullet(bullet);
+        }
     }
 
 }
@@ -135,4 +200,7 @@ void Tower::lostSightOfEnemy()
 
     m_fireRateTimer->stop();
 
+}
+QPoint Tower::returnPos(){
+    return m_pos;
 }
