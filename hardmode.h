@@ -45,7 +45,7 @@ private:
     void drawHP(QPainter *painter);
     void drawPlayerGold(QPainter *painter);
     void doGameOver();
-    void preLoadWavesInfo();
+
 private:
     int						m_waves;
     int						m_playerHp;

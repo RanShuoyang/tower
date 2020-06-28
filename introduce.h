@@ -12,7 +12,7 @@ public:
     explicit introduce(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *);
 
-    choosemode * choose_back;
+    //choosemode * choose=nullptr;
 
 
 signals:

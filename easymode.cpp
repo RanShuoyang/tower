@@ -5,6 +5,7 @@
 #include "enemy.h"
 #include "bullet.h"
 #include <QPainter>
+#include <QPoint>
 #include <QMouseEvent>
 #include <QtGlobal>
 #include <QMessageBox>
@@ -15,9 +16,8 @@
 #include <button.h>
 #include "end.h"
 #include "QMediaPlayer"
-
-
-//static const int TowerCost = 300;
+#include "QMediaPlaylist"
+static const int TowerCost = 300;
 
 easymode::easymode(QWidget *parent)
     : QMainWindow(parent)
@@ -35,10 +35,15 @@ easymode::easymode(QWidget *parent)
     loadTowerPositions();
     addWayPoints();
 
+
     QMediaPlayer *gamesound = new QMediaPlayer;
-
-    gamesound->setMedia(QUrl("qrc:/Jump.mp3"));
-
+    //gamesound->setMedia(QUrl("qrc:/Jump.mp3"));
+    //gamesound->setVolume(50);
+    QMediaPlaylist * playlist=new QMediaPlaylist;
+    playlist->addMedia(QUrl("qrc:/Jump.mp3"));
+    playlist->setCurrentIndex(1);
+    playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+    gamesound->setPlaylist(playlist);
     gamesound->setVolume(50);
 
 
@@ -49,8 +54,8 @@ easymode::easymode(QWidget *parent)
     connect(startbutton,&button::clicked,[=](){
        startbutton->down();
        startbutton->up();
-       gamesound->play();
        this->gameStart();
+       gamesound->play();
     });
 
     button *tower1 = new button(":/1.png");
@@ -71,13 +76,16 @@ easymode::easymode(QWidget *parent)
        this->Tower_ID=2;
     });
 
+
+
+
+
     //gameStart();
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateMap()));
     timer->start(30);
 
-    // 设置300ms后游戏启动
-    //QTimer::singleShot(300, this, SLOT(gameStart()));
+
 }
 
 easymode::~easymode()
@@ -106,7 +114,6 @@ void easymode::loadTowerPositions()
 
 void easymode::paintEvent(QPaintEvent *)
 {
-
     QPixmap cachePix(":/background2.png");
     QPainter cachePainter(&cachePix);
 
@@ -137,10 +144,10 @@ void easymode::mousePressEvent(QMouseEvent *event)
         if (canBuyTower() && it->containPoint(pressPos) && !it->hasTower())
         {
             if(Tower_ID==1){
-                m_playrGold -= 300;
+                m_playrGold -= TowerCost;
             }
             if(Tower_ID==2){
-                m_playrGold-= 500;
+                m_playrGold-= TowerCost+500;
             }
             it->setHasTower();
             Tower *tower = new Tower(it->centerPos(), this,Tower_ID);
@@ -161,19 +168,19 @@ void easymode::mousePressEvent(QMouseEvent *event)
           {
               m_playrGold=m_playrGold+100;
               it->setHasTower(false);
+              //m_towersList.pop_back();
               for(int i=0;i<m_towersList.size();i++){
                   if(m_towersList.at(i)->returnPos()==it->centerPos()){
                       m_towersList.takeAt(i);
                   }
               }
-
               update();
               break;
           }
-
           ++it;
          }
-    }
+       }
+
 }
 void easymode::mouseDoubleClickEvent(QMouseEvent *e){
     QPoint p_position=e->pos();
@@ -185,22 +192,29 @@ void easymode::mouseDoubleClickEvent(QMouseEvent *e){
                     m_towersList.at(i)->levelup();
                 }
             }
-            m_playrGold=m_playrGold-200;
+            m_playrGold=m_playrGold-300;
+            //Tower *tower=new Tower(p_position,this,Tower_ID);
+            //m_towersList.push_back(tower);
+            //tower->levelup();
+            //m_towersList.push_back(tower);
             update();
             break;
         }
          ++it;
     }
+
 }
 bool easymode::canBuyTower() const
 {
-    if(Tower_ID==1){
-        if (m_playrGold >= 300)
+    if (Tower_ID==1){
+        if(m_playrGold>=300){
             return true;
+        }
     }
-    if(Tower_ID==2){
-        if (m_playrGold >= 500)
+    if (Tower_ID==2){
+        if(m_playrGold>=800){
             return true;
+        }
     }
     return false;
 }
@@ -391,4 +405,3 @@ void easymode::gameStart()
 {
     loadWave();
 }
-

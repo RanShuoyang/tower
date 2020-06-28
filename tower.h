@@ -45,6 +45,8 @@ private:
     QTimer *		m_fireRateTimer;
 
     QPoint	m_pos;
+
+    int m_mode=0;
     QPixmap	m_sprite;
 
 

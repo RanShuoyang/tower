@@ -15,6 +15,7 @@ bullet::bullet(QPoint startPos, QPoint targetPoint, int damage, enemy *target,
     , m_game(game)
     , m_damage(damage)
     , ID(id)
+    , m_mode(1)
 {
     if(ID==1){
         m_sprite=QPixmap(":/bullet.png");
@@ -33,6 +34,7 @@ bullet::bullet(QPoint startPos, QPoint targetPoint, int damage, enemy *target,
     , M_game(game)
     , m_damage(damage)
     , ID(id)
+    , m_mode(2)
 {
     if(ID==1){
         m_sprite=QPixmap(":/bullet.png");
@@ -66,12 +68,12 @@ void bullet::hitTarget()
     // 可能多个炮弹击中敌人,而其中一个将其消灭,导致敌人delete
     // 后续炮弹再攻击到的敌人就是无效内存区域
     // 因此先判断下敌人是否还有效
-    if(m_game){
+    if(m_mode==1){
         if (m_game->enemyList().indexOf(m_target) != -1)
             m_target->getDamage(m_damage);
         m_game->removedBullet(this);
     }
-    if(M_game){
+    if(m_mode==2){
         if (M_game->enemyList().indexOf(m_target) != -1)
             m_target->getDamage(m_damage);
         M_game->removedBullet(this);

@@ -47,6 +47,8 @@ private:
     hardmode *      M_game=nullptr;
     QList<Tower *>	m_attackedTowersList;
 
+    int             m_mode;
+
     QPixmap   m_sprite;
 };
 

@@ -23,7 +23,7 @@ hardmode::hardmode(QWidget *parent)
     : QMainWindow(parent)
     , m_waves(0)
     , m_playerHp(5)
-    , m_playrGold(10000)
+    , m_playrGold(800)
     , Tower_ID(1)
     , m_gameEnded(false)
     , m_gameWin(false)
@@ -147,7 +147,7 @@ void hardmode::mousePressEvent(QMouseEvent *event)
                 m_playrGold -= TowerCost;
             }
             if(Tower_ID==2){
-                m_playrGold-= TowerCost+100;
+                m_playrGold-= TowerCost+500;
             }
             it->setHasTower();
             Tower *tower = new Tower(it->centerPos(), this,Tower_ID);
@@ -166,7 +166,7 @@ void hardmode::mousePressEvent(QMouseEvent *event)
          {
           if (it->containPoint(pressPos)&&it->hasTower())
           {
-              m_playrGold=m_playrGold+50;
+              m_playrGold=m_playrGold+100;
               it->setHasTower(false);
               //m_towersList.pop_back();
               for(int i=0;i<m_towersList.size();i++){
@@ -206,8 +206,16 @@ void hardmode::mouseDoubleClickEvent(QMouseEvent *e){
 }
 bool hardmode::canBuyTower() const
 {
-    if (m_playrGold >= TowerCost)
+    if(Tower_ID==1){
+
+       if (m_playrGold >= 300)
         return true;
+    }
+    if(Tower_ID==2){
+
+       if (m_playrGold >= 800)
+        return true;
+    }
     return false;
 }
 

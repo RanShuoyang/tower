@@ -23,6 +23,7 @@ Tower::Tower(QPoint pos, easymode *game,int id/*=1*/)
     , m_chooseEnemy(nullptr)
     , m_game(game)
     , m_pos(pos)
+    , m_mode(1)
 
 {
     if(ID==1){
@@ -31,7 +32,7 @@ Tower::Tower(QPoint pos, easymode *game,int id/*=1*/)
     if(ID==2){
         m_sprite=QPixmap(":/3.png");
         m_damage=20;
-        m_fireRate=700;
+        m_fireRate=1500;
     }
     m_fireRateTimer = new QTimer(this);
     connect(m_fireRateTimer, SIGNAL(timeout()), this, SLOT(shootWeapon()));
@@ -46,6 +47,7 @@ Tower::Tower(QPoint pos, hardmode *game,int id/*=1*/)
     , m_chooseEnemy(nullptr)
     , M_game(game)
     , m_pos(pos)
+    , m_mode(2)
 
 {
     if(ID==1){
@@ -54,7 +56,7 @@ Tower::Tower(QPoint pos, hardmode *game,int id/*=1*/)
     if(ID==2){
         m_sprite=QPixmap(":/3.png");
         m_damage=30;
-        m_fireRate=800;
+        m_fireRate=1500;
     }
     m_fireRateTimer = new QTimer(this);
     connect(m_fireRateTimer, SIGNAL(timeout()), this, SLOT(shootWeapon()));
@@ -65,25 +67,27 @@ Tower::~Tower()
     m_fireRateTimer = nullptr;
 }
 void Tower::levelup(){
-    if(m_game){
-      if(ID==1){
-      m_sprite=QPixmap(":/2.png");
-      m_damage=25;
-      }
-      if(ID==2){
-      m_sprite=QPixmap(":/4.png");
-      m_damage=25;
-      }
-    }
-    if(M_game){
+    if(m_mode==1){
       if(ID==1){
       m_sprite=QPixmap(":/2.png");
       m_damage=20;
-      m_fireRate=1200;
+      }
+      if(ID==2){
+      m_sprite=QPixmap(":/4.png");
+      m_damage=30;
+      m_fireRate=1800;
+      }
+    }
+    if(m_mode==2){
+      if(ID==1){
+      m_sprite=QPixmap(":/2.png");
+      m_damage=20;
+      m_fireRate=800;
       }
       if(ID==2){
       m_sprite=QPixmap(":/4.png");
       m_damage=40;
+      m_fireRate=1800;
       }
     }
 
@@ -105,7 +109,7 @@ void Tower::checkEnemyInRange()
     else
     {
         // 遍历敌人,看是否有敌人在攻击范围内
-       if(m_game){
+       if(m_mode==1){
         QList<enemy *> enemyList = m_game->enemyList();
         foreach (enemy *enemy, enemyList)
         {
@@ -116,7 +120,7 @@ void Tower::checkEnemyInRange()
             }
         }
        }
-       if(M_game){
+       if(m_mode==2){
         QList<enemy *> enemyList = M_game->enemyList();
         foreach (enemy *enemy, enemyList)
         {
@@ -157,24 +161,24 @@ void Tower::shootWeapon()
 {
     QPoint p(m_pos.x()-10,m_pos.y()-60);
     if(ID==1){
-        if(m_game){
+        if(m_mode==1){
             bullet *bullet = new class bullet(p, m_chooseEnemy->pos(), m_damage, m_chooseEnemy, m_game,1);
             bullet->move();
             m_game->addBullet(bullet);
         }
-        if(M_game){
+        if(m_mode==2){
             bullet *bullet = new class bullet(p, m_chooseEnemy->pos(), m_damage, m_chooseEnemy, M_game,1);
             bullet->move();
             M_game->addBullet(bullet);
         }
     }
     if(ID==2){
-        if(m_game){
+        if(m_mode==1){
         bullet *bullet = new class bullet(p, m_chooseEnemy->pos(), m_damage, m_chooseEnemy, m_game,2);
         bullet->move();
         m_game->addBullet(bullet);
         }
-        if(M_game){
+        if(m_mode==2){
         bullet *bullet = new class bullet(p, m_chooseEnemy->pos(), m_damage, m_chooseEnemy, M_game,2);
         bullet->move();
         M_game->addBullet(bullet);

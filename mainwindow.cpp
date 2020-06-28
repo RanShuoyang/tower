@@ -31,43 +31,31 @@ MainWindow::MainWindow(QWidget *parent)
 
     choose=new choosemode;//选择模式
 
+
+
+
     QMediaPlayer *gamesound = new QMediaPlayer;
-    gamesound->setMedia(QUrl("qrc:/Mark's Theme.mp3"));
+    QMediaPlaylist * playlist=new QMediaPlaylist;
+    playlist->addMedia(QUrl("qrc:/Mark's Theme.mp3"));
+    playlist->setCurrentIndex(1);
+    playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+    gamesound->setPlaylist(playlist);
     gamesound->setVolume(50);
     gamesound->play();
 
-    //connect(choose,&choosemode::chooseback,this,[=](){
-    //    choose->hide();
-    //    this->show();
-    //    gamesound->play();
-   // });
-
-
-
     introduce * intro= new introduce;
     //开始按钮
-
-    //准备开始音效
-
-
-
-
-
-
     button *startbutton = new button(":/startpress.png");
     startbutton->setParent(this);
     startbutton->move(this->width()*0.5-startbutton->width()*0.5,this->height()*0.5);
-
     connect(startbutton,&button::clicked,[=](){
        startbutton->down();
        startbutton->up();
        gamesound->stop();
        //延时进入
        QTimer::singleShot(500,this,[=](){
-
          this->hide();
          intro->show();
-
        });
     });
 

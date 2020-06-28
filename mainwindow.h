@@ -30,6 +30,9 @@ public:
     void MusicOn();
     void MusicOff();
 
+signals:
+   //自定义的信号
+    //void play_music();
 
 private:
     Ui::MainWindow *		ui;

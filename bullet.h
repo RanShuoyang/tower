@@ -41,5 +41,6 @@ private:
     hardmode *      M_game=nullptr;
     int				m_damage;
     int             ID;
+    int             m_mode;
 };
 #endif // BULLET_H

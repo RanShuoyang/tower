@@ -4,6 +4,7 @@
 #include "QTimer"
 #include "choosemode.h"
 #include "QSound"
+#include "mainwindow.h"
 introduce::introduce(QWidget *parent) : QMainWindow(parent)
 {
     this->setFixedSize(1600,830);
@@ -14,17 +15,18 @@ introduce::introduce(QWidget *parent) : QMainWindow(parent)
 
     //choose= new choosemode;
 
-    QMediaPlayer *gamesound = new QMediaPlayer;
+    //QMediaPlayer *gamesound = new QMediaPlayer;
 
-    gamesound->setMedia(QUrl("qrc:/Jump.mp3"));
+    //gamesound->setMedia(QUrl("qrc:/Jump.mp3"));
 
-    gamesound->setVolume(50);
+    //gamesound->setVolume(50);
 
-    gamesound->play();
+    //gamesound->play();
 
     button * nextbutton=new button(":/press.png");
 
-    choosemode *choose = new choosemode ;
+    choosemode * choose = new choosemode ;
+
 
     nextbutton->setParent(this);
 
@@ -33,7 +35,7 @@ introduce::introduce(QWidget *parent) : QMainWindow(parent)
     connect(nextbutton,&button::clicked,[=](){
        nextbutton->down();
        nextbutton->up();
-       gamesound->stop();
+       //gamesound->stop();
 
        QTimer::singleShot(500,this,[=](){
 
@@ -44,10 +46,8 @@ introduce::introduce(QWidget *parent) : QMainWindow(parent)
          connect(choose,&choosemode::chooseback,this,[=](){
              choose->hide();
              this->show();
-             gamesound->play();
-         });
-
-
+             //gamesound->play();
+             });
        });
 
     });

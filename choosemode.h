@@ -5,6 +5,7 @@
 #include <QMediaPlayer>
 
 class easymode;
+class hardmode;
 class choosemode : public QMainWindow
 {
     Q_OBJECT
